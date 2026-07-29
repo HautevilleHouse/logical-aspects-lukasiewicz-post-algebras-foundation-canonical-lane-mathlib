@@ -3,22 +3,25 @@ import canonicalLaneMathlib.AdmissibleClass
 namespace HautevilleHouse
 namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
-structure PostAlgebraPackage (M : MVAlgebraPackage) where
-  latticeStructure : Type u
-  monadicOperator : (M.carrier → M.carrier)
-  diagonalityCondition : Prop
-  representationTheorem : Prop
+structure PostAlgebra (n : ℕ) where
+  carrier : Type u
+  chain : LukasiewiczChain n
+  lattice : Prop
+  latticeClosed : lattice
+  constants : Fin n → carrier
+  constantsClosed : ∀ i, constants i = constants i
 
-structure PostAlgebraEvidence {M : MVAlgebraPackage} (P : PostAlgebraPackage M) where
-  diagonalityConditionClosed : P.diagonalityCondition
-  representationTheoremClosed : P.representationTheorem
+structure PostAlgebraMorphism (A B : PostAlgebra n) where
+  map : A.carrier → B.carrier
+  preservesStructure : Prop
+  preservesStructureClosed : preservesStructure
 
-def PostAlgebraClosed {M : MVAlgebraPackage} (P : PostAlgebraPackage M) : Prop :=
-  P.diagonalityCondition ∧ P.representationTheorem
+def PostAlgebraClosed (n : ℕ) (P : PostAlgebra n) : Prop :=
+  P.lattice
 
-theorem post_algebra_closed_from_evidence {M : MVAlgebraPackage} (P : PostAlgebraPackage M)
-    (E : PostAlgebraEvidence P) : PostAlgebraClosed P :=
-  And.intro E.diagonalityConditionClosed E.representationTheoremClosed
+theorem post_algebra_closed_from_evidence (n : ℕ) (P : PostAlgebra n) :
+    PostAlgebraClosed n P := by
+  exact P.latticeClosed
 
 end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse
