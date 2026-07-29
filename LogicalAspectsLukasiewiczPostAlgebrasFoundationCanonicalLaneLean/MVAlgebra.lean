@@ -1,31 +1,35 @@
-import canonicalLaneMathlib.AdmissibleClass
+import LogialAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean.LatticeStructure
 
 namespace HautevilleHouse
-namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
+namespace LogialAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
-structure MvAlgebraPackage where
-  lattice : LukasiewiczLatticePackage
-  implication : lattice.carrier → lattice.carrier → lattice.carrier
-  negation : lattice.carrier → lattice.carrier
-  implicationLaws : Prop
-  negationLaws : Prop
-  mvAlgebraAxioms : Prop
+structure MVAlgebra where
+  carrier : Type u
+  addition : carrier → carrier → carrier
+  negation : carrier → carrier
+  zero : carrier
+  one : carrier
+  associative : Prop
+  commutative : Prop
+  involutiveNegation : Prop
+  additionCompatibleWithOrder : Prop
+  evidence : MVAlgebraEvidence
 
-def MvAlgebraClosed (M : MvAlgebraPackage) : Prop :=
-  LukasiewiczLatticeClosed M.lattice ∧ M.implicationLaws ∧ M.negationLaws ∧ M.mvAlgebraAxioms
+structure MVAlgebraEvidence (A : MVAlgebra) where
+  associativeClosed : A.associative
+  commutativeClosed : A.commutative
+  involutiveNegationClosed : A.involutiveNegation
+  additionCompatibleWithOrderClosed : A.additionCompatibleWithOrder
 
-structure MvAlgebraEvidence (M : MvAlgebraPackage) where
-  latticeClosed : LukasiewiczLatticeClosed M.lattice
-  implicationLawsClosed : M.implicationLaws
-  negationLawsClosed : M.negationLaws
-  mvAlgebraAxiomsClosed : M.mvAlgebraAxioms
+def MVAlgebraClosed (A : MVAlgebra) : Prop :=
+  A.associative ∧ A.commutative ∧ A.involutiveNegation ∧ A.additionCompatibleWithOrder
 
 theorem mv_algebra_closed_from_evidence
-    (M : MvAlgebraPackage) (E : MvAlgebraEvidence M) :
-    MvAlgebraClosed M := by
-  exact And.intro E.latticeClosed
-    (And.intro E.implicationLawsClosed
-      (And.intro E.negationLawsClosed E.mvAlgebraAxiomsClosed))
+    (A : MVAlgebra) (E : MVAlgebraEvidence A) :
+    MVAlgebraClosed A := by
+  exact And.intro E.associativeClosed
+    (And.intro E.commutativeClosed
+      (And.intro E.involutiveNegationClosed E.additionCompatibleWithOrderClosed))
 
-end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
+end LogialAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse
