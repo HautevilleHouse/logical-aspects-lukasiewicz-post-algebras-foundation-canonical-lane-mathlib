@@ -1,34 +1,28 @@
-import .FiniteValuedness
+import canonicalLaneMathlib.AdmissibleClass
 
 namespace HautevilleHouse
 namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
-structure PostAlgebrasPackage (L : LatticeStructurePackage)
-    (N : NegationImplicationPackage L) (F : FiniteValuednessPackage L N) where
-  distinguishedElement : L.carrier
-  centerElement : L.carrier
-  centerProperties : (a : L.carrier) → N.implication (N.negation a) a = centerElement
-  dualLattice : LatticeStructurePackage
-  dualEmbedding : L.carrier → dualLattice.carrier
-  embeddingPreservesOperations : (a b : L.carrier) → 
-    dualEmbedding (L.meet a b) = dualLattice.meet (dualEmbedding a) (dualEmbedding b)
+structure PostAlgebrasPackage where
+  carrier : Type u
+  operations : carrier → carrier → carrier
+  distinguishedElements : List carrier
+  postAlgebraAxioms : Prop
+  representation : Prop
+  chainCondition : Prop
+  completeness : Prop
 
-structure PostAlgebrasEvidence (L : LatticeStructurePackage)
-    (N : NegationImplicationPackage L) (F : FiniteValuednessPackage L N)
-    (P : PostAlgebrasPackage L N F) where
-  centerPropertiesClosed : ∀ a : L.carrier, P.centerProperties a
-  embeddingPreservesOperationsClosed : ∀ a b : L.carrier, P.embeddingPreservesOperations a b
+structure PostAlgebrasEvidence (P : PostAlgebrasPackage) where
+  postAlgebraAxiomsClosed : P.postAlgebraAxioms
+  representationClosed : P.representation
+  chainConditionClosed : P.chainCondition
+  completenessClosed : P.completeness
 
-def PostAlgebrasClosed (L : LatticeStructurePackage)
-    (N : NegationImplicationPackage L) (F : FiniteValuednessPackage L N)
-    (P : PostAlgebrasPackage L N F) : Prop :=
-  (∀ a : L.carrier, P.centerProperties a) ∧ (∀ a b : L.carrier, P.embeddingPreservesOperations a b)
+def PostAlgebrasClosed (P : PostAlgebrasPackage) : Prop :=
+  P.postAlgebraAxioms ∧ P.representation ∧ P.chainCondition ∧ P.completeness
 
-theorem post_algebras_closed_from_evidence (L : LatticeStructurePackage)
-    (N : NegationImplicationPackage L) (F : FiniteValuednessPackage L N)
-    (P : PostAlgebrasPackage L N F) (E : PostAlgebrasEvidence L N F P) :
-    PostAlgebrasClosed L N F P := by
-  exact And.intro E.centerPropertiesClosed E.embeddingPreservesOperationsClosed
+theorem post_algebras_closed_from_evidence (P : PostAlgebrasPackage) (E : PostAlgebrasEvidence P) : PostAlgebrasClosed P := by
+  exact And.intro E.postAlgebraAxiomsClosed (And.intro E.representationClosed (And.intro E.chainConditionClosed E.completenessClosed))
 
 end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse

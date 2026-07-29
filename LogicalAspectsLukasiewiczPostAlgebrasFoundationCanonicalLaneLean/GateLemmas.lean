@@ -1,14 +1,13 @@
-import LogialAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean.BridgeLemmas
+import canonicalLaneMathlib.AdmissibleClass
 
 namespace HautevilleHouse
-namespace LogialAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
+namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
 def gateClosed (A : AdmissibleClass) : Prop :=
   A.endpointSatisfied ∨ A.remainderRecorded
 
-theorem gate_from_admissible_class (A : AdmissibleClass) :
-    gateClosed A := by
+theorem gate_from_admissible_class (A : AdmissibleClass) : gateClosed A := by
   exact A.gateWitness
 
-end LogialAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
+end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse

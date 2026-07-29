@@ -3,27 +3,30 @@ import canonicalLaneMathlib.AdmissibleClass
 namespace HautevilleHouse
 namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
-structure LukasiewiczAlgebra (n : ℕ) where
+structure LukasiewiczAlgebrasPackage where
   carrier : Type u
-  top : carrier
-  bot : carrier
-  impl : carrier → carrier → carrier
-  neg : carrier → carrier
-  axioms : Prop
-  axiomsClosed : axioms
+  addition : carrier → carrier → carrier
+  multiplication : carrier → carrier → carrier
+  negation : carrier → carrier
+  implication : carrier → carrier → carrier
+  constantZero : carrier
+  constantOne : carrier
+  axiomsSatisfied : Prop
+  latticeStructure : Prop
+  mvAlgebraAxioms : Prop
+  completeness : Prop
 
-structure LukasiewiczChain (n : ℕ) where
-  values : Fin n → Prop
-  order : Fin n → Fin n → Prop
-  chainAxioms : Prop
-  chainAxiomsClosed : chainAxioms
+structure LukasiewiczAlgebrasEvidence (L : LukasiewiczAlgebrasPackage) where
+  axiomsSatisfiedClosed : L.axiomsSatisfied
+  latticeStructureClosed : L.latticeStructure
+  mvAlgebraAxiomsClosed : L.mvAlgebraAxioms
+  completenessClosed : L.completeness
 
-def LukasiewiczAlgebraClosed (n : ℕ) (L : LukasiewiczAlgebra n) : Prop :=
-  L.axioms
+def LukasiewiczAlgebrasClosed (L : LukasiewiczAlgebrasPackage) : Prop :=
+  L.axiomsSatisfied ∧ L.latticeStructure ∧ L.mvAlgebraAxioms ∧ L.completeness
 
-theorem lukasiewicz_algebra_closed_from_evidence (n : ℕ) (L : LukasiewiczAlgebra n) :
-    LukasiewiczAlgebraClosed n L := by
-  exact L.axiomsClosed
+theorem lukasiewicz_algebras_closed_from_evidence (L : LukasiewiczAlgebrasPackage) (E : LukasiewiczAlgebrasEvidence L) : LukasiewiczAlgebrasClosed L := by
+  exact And.intro E.axiomsSatisfiedClosed (And.intro E.latticeStructureClosed (And.intro E.mvAlgebraAxiomsClosed E.completenessClosed))
 
 end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse
