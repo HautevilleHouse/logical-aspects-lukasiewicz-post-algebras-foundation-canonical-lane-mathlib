@@ -1,4 +1,4 @@
-import canonicalLaneMathlib.AdmissibleClass
+import HautevilleHouse.LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean.BridgeLemmas
 
 namespace HautevilleHouse
 namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean

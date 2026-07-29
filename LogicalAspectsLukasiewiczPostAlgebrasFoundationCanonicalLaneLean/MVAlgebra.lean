@@ -3,28 +3,29 @@ import canonicalLaneMathlib.AdmissibleClass
 namespace HautevilleHouse
 namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
-structure MVAlgebra where
-  carrier : Type u
-  zero : carrier
-  one : carrier
-  addition : carrier → carrier → carrier
-  negation : carrier → carrier
-  axioms : Prop
-  axiomsClosed : axioms
+structure MvAlgebraPackage where
+  lattice : LukasiewiczLatticePackage
+  implication : lattice.carrier → lattice.carrier → lattice.carrier
+  negation : lattice.carrier → lattice.carrier
+  implicationLaws : Prop
+  negationLaws : Prop
+  mvAlgebraAxioms : Prop
 
-structure MVAlgebraMorphism (A B : MVAlgebra) where
-  map : A.carrier → B.carrier
-  preservesZero : map A.zero = B.zero
-  preservesOne : map A.one = B.one
-  preservesAddition : ∀ x y, map (A.addition x y) = B.addition (map x) (map y)
-  preservesNegation : ∀ x, map (A.negation x) = B.negation (map x)
+def MvAlgebraClosed (M : MvAlgebraPackage) : Prop :=
+  LukasiewiczLatticeClosed M.lattice ∧ M.implicationLaws ∧ M.negationLaws ∧ M.mvAlgebraAxioms
 
-def MVAlgebraClosed (M : MVAlgebra) : Prop :=
-  M.axioms
+structure MvAlgebraEvidence (M : MvAlgebraPackage) where
+  latticeClosed : LukasiewiczLatticeClosed M.lattice
+  implicationLawsClosed : M.implicationLaws
+  negationLawsClosed : M.negationLaws
+  mvAlgebraAxiomsClosed : M.mvAlgebraAxioms
 
-theorem mv_algebra_closed_from_evidence (M : MVAlgebra) :
-    MVAlgebraClosed M := by
-  exact M.axiomsClosed
+theorem mv_algebra_closed_from_evidence
+    (M : MvAlgebraPackage) (E : MvAlgebraEvidence M) :
+    MvAlgebraClosed M := by
+  exact And.intro E.latticeClosed
+    (And.intro E.implicationLawsClosed
+      (And.intro E.negationLawsClosed E.mvAlgebraAxiomsClosed))
 
 end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse

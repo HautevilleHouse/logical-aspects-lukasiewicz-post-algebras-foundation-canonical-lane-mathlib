@@ -3,24 +3,33 @@ import canonicalLaneMathlib.AdmissibleClass
 namespace HautevilleHouse
 namespace LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 
-structure MVAlgebraPackage where
+structure LukasiewiczLatticePackage where
   carrier : Type u
-  top : carrier
+  join : carrier → carrier → carrier
+  meet : carrier → carrier → carrier
   bottom : carrier
-  negation : carrier → carrier
-  implication : carrier → carrier → carrier
-  additionalOperation : carrier → carrier → carrier
-  axiomsSatisfied : Prop
+  top : carrier
+  complement : carrier → carrier
+  latticeLaws : Prop
+  bounded : Prop
+  pseudocomplemented : Prop
+  stoneIdentity : Prop
 
-structure MVAlgebraEvidence (M : MVAlgebraPackage) where
-  axiomsSatisfiedClosed : M.axiomsSatisfied
+def LukasiewiczLatticeClosed (L : LukasiewiczLatticePackage) : Prop :=
+  L.latticeLaws ∧ L.bounded ∧ L.pseudocomplemented ∧ L.stoneIdentity
 
-def MVAlgebraClosed (M : MVAlgebraPackage) : Prop :=
-  M.axiomsSatisfied
+structure LukasiewiczLatticeEvidence (L : LukasiewiczLatticePackage) where
+  latticeLawsClosed : L.latticeLaws
+  boundedClosed : L.bounded
+  pseudocomplementedClosed : L.pseudocomplemented
+  stoneIdentityClosed : L.stoneIdentity
 
-theorem mv_algebra_closed_from_evidence (M : MVAlgebraPackage) (E : MVAlgebraEvidence M) :
-    MVAlgebraClosed M :=
-  E.axiomsSatisfiedClosed
+theorem lukasiewicz_lattice_closed_from_evidence
+    (L : LukasiewiczLatticePackage) (E : LukasiewiczLatticeEvidence L) :
+    LukasiewiczLatticeClosed L := by
+  exact And.intro E.latticeLawsClosed
+    (And.intro E.boundedClosed
+      (And.intro E.pseudocomplementedClosed E.stoneIdentityClosed))
 
 end LogicalAspectsLukasiewiczPostAlgebrasFoundationCanonicalLaneLean
 end HautevilleHouse
